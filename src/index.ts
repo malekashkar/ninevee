@@ -1,5 +1,4 @@
 import config from "./config";
-import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
 import Logger from "./util/logger";
@@ -7,8 +6,10 @@ import mongoose from "mongoose";
 import Command from "./commands";
 import Event from "./events";
 import { Collection, Invite, Client, ClientOptions } from "discord.js";
+import express from "express";
 
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+const app = express();
+app.listen(process.env.PORT || 3000);
 
 export default class Bot extends Client {
   commands: Collection<string, Command> = new Collection();
