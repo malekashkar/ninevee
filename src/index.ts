@@ -9,7 +9,8 @@ import { Collection, Invite, Client, ClientOptions } from "discord.js";
 import express from "express";
 
 const app = express();
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 5000);
+app.get("/");
 
 export default class Bot extends Client {
   commands: Collection<string, Command> = new Collection();
@@ -26,14 +27,14 @@ export default class Bot extends Client {
       },
     });
 
-    this.loadDatabase(process.env.MONGO_URL);
+    this.loadDatabase();
     this.loadCommands();
     this.loadEvents();
   }
 
-  loadDatabase(url: string) {
+  loadDatabase() {
     mongoose.connect(
-      url,
+      process.env.MONGO_URL,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
