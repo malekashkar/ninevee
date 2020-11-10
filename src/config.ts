@@ -1,13 +1,13 @@
 const prefixes = {
-  emojiLocker: "e!",
-  intro: "i!",
-  utilities: "u!",
+  EmojiLocker: "e!",
+  Intro: "i!",
+  Utility: "u!",
 };
 
 export interface ICategories {
-  emojiLocker: string;
-  intro: string;
-  utilities: string;
+  EmojiLocker: string;
+  Intro: string;
+  Utility: string;
 }
 
 const reactionRoles = [

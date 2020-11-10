@@ -7,7 +7,7 @@ export default class emojiLockerEvent extends Event {
   name = "message";
 
   async handle(message: Message) {
-    if (message.content.includes(config.prefixes.emojiLocker)) return;
+    if (message.content.includes(config.prefixes.EmojiLocker)) return;
 
     const emojiInfo = message.content
       ? message.content.match(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/gm)

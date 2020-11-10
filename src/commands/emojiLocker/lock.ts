@@ -1,11 +1,11 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Command from "..";
+import EmojiLockerGroup from ".";
 import DbGuild, { EmojiLocker } from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
 
-export default class lockEmojiCommand extends Command {
+export default class lockEmojiCommand extends EmojiLockerGroup {
   name = "lock";
   description = "Lock an emoji to a certain role.";
 

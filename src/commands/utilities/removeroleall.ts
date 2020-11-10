@@ -1,11 +1,11 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Command from "..";
+import UtilityGroup from ".";
 import DbGuild from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
 
-export default class RemoveAllCommand extends Command {
+export default class RemoveAllCommand extends UtilityGroup {
   name = "removeroleall";
   description = "Remove a role from all the users in the discord server.";
 

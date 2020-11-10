@@ -1,11 +1,11 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Command from "..";
+import UtilityGroup from ".";
 import DbGuild from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
 
-export default class SyncRoleCommand extends Command {
+export default class SyncRoleCommand extends UtilityGroup {
   name: "syncrole";
   description = "Sync one role with the other.";
 

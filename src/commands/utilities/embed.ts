@@ -1,21 +1,23 @@
-import { DocumentType } from "@typegoose/typegoose";
 import { Message, MessageEmbed } from "discord.js";
-import Command from "..";
-import DbGuild from "../../models/guild";
-import DbUser from "../../models/user";
+import UtilityGroup from ".";
 
-export default class EmbedCommand extends Command {
+export default class EmbedCommand extends UtilityGroup {
   name = "embed";
   description = "Create a message embed.";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData?: DocumentType<DbUser>,
-    guildData?: DocumentType<DbGuild>,
-  ) {
-    message.channel.send(
-      new MessageEmbed().setDescription(args.join(" ")).setColor("#2C2F33")
-    );
+  async run(message: Message, args: string[]) {
+    const content = message.content.split(this.name).slice(1).join(" ");
+    let description: string = content;
+    let title: string;
+
+    if (content.includes("^")) {
+      title = content.split("^")[0].trim();
+      description = content.split("^").slice(1).join(" ").trim();
+    }
+
+    const embed = new MessageEmbed().setColor("#2C2F33");
+    if (title) embed.setTitle(title);
+    if (description) embed.setDescription(description);
+    message.channel.send(embed);
   }
 }

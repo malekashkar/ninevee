@@ -1,12 +1,12 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Command from "..";
+import EmojiLockerGroup from ".";
 import DbGuild, { EmojiLocker } from "../../models/guild";
 import DbUser from "../../models/user";
 import confirmation from "../../util/confirmation";
 import embeds from "../../util/embeds";
 
-export default class unlockAddEmojis extends Command {
+export default class unlockAddEmojis extends EmojiLockerGroup {
   name = "unlockall";
   description = "Unlock all of the locked emojis.";
 

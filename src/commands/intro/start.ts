@@ -1,12 +1,12 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
-import Command from "..";
+import IntroGroup from ".";
 import config from "../../config";
 import DbGuild from "../../models/guild";
 import DbUser, { Intro } from "../../models/user";
 import { question } from "../../util";
 
-export default class StartCommand extends Command {
+export default class StartCommand extends IntroGroup {
   name = "start";
   description = "Start your introduction questions";
 

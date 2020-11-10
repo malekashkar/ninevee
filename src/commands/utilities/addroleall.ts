@@ -1,11 +1,11 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Command from "..";
+import UtilityGroup from ".";
 import DbGuild from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
 
-export default class AddRoleAddCommand extends Command {
+export default class AddRoleAddCommand extends UtilityGroup {
   name = "addroleall";
   description = "Add a role to all the users in your server.";
 

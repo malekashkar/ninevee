@@ -1,12 +1,12 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message, TextChannel } from "discord.js";
-import Command from "..";
+import IntroGroup from ".";
 import config from "../../config";
 import DbGuild from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
 
-export default class StartCommand extends Command {
+export default class StartCommand extends IntroGroup {
   name = "delete";
   description = "Delete your introduction questions";
 
