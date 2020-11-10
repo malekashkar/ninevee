@@ -7,8 +7,8 @@ import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
 
 export default class StartCommand extends Command {
-  name = "start";
-  description = "Start your introduction questions";
+  name = "delete";
+  description = "Delete your introduction questions";
 
   async run(
     message: Message,

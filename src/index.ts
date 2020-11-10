@@ -42,12 +42,8 @@ export default class Bot extends Client {
         serverSelectionTimeoutMS: 60000,
       },
       (err) => {
-        if (err) Logger.error("DATABASE", err);
-        else
-          Logger.info(
-            "DATABASE",
-            `The database has been connected successfully.`
-          );
+        if (err) Logger.error("DB", err);
+        else Logger.info("DB", `The database has been connected successfully.`);
       }
     );
   }
