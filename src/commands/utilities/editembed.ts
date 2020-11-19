@@ -3,10 +3,20 @@ import UtilityGroup from ".";
 import embeds from "../../util/embeds";
 
 export default class EmbedCommand extends UtilityGroup {
-  name = "embed";
-  description = "Create a message embed.";
+  name = "editembed";
+  description = "Edit an embed that was made in the past.";
 
-  async run(message: Message) {
+  async run(message: Message, args: string[]) {
+    const fetchedMessage = args[0]
+      ? await message.channel.messages.fetch(args[0])
+      : null;
+    if (!fetchedMessage)
+      return message.channel.send(
+        embeds.error(
+          `Please provide a valid id of the message you would like to edit in this channel.`
+        )
+      );
+
     const title = await question(
       message,
       `What would you like the embed title to say?\nReply with "no" if you would like to skip this.`
@@ -58,7 +68,7 @@ export default class EmbedCommand extends UtilityGroup {
     if (image) embed.setImage(image);
     if (thumbnail) embed.setThumbnail(thumbnail);
     if (fields.length) embed.addFields(fields);
-    return await message.channel.send(embed);
+    return await fetchedMessage.edit(embed);
   }
 }
 

@@ -1,3 +1,11 @@
-node_modules
-dist
+# Folders
+node_modules/
+dist/
+
+# Priv Files
 .env
+
+# Pub Files
+yarn.lock
+package.lock
+package-lock.json

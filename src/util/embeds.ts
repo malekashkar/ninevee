@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+import { MessageEmbed } from "discord.js";
 
 export default class embeds {
   static error(text: string, title = "Error Caught") {
@@ -19,5 +19,18 @@ export default class embeds {
       .setFooter(`Vee and Nine`)
       .setColor("RANDOM")
       .setTimestamp();
+  }
+
+  static question(text: string) {
+    return new MessageEmbed()
+      .setTitle(`You have 15 minutes to answer the question below.`)
+      .setDescription(text)
+      .setFooter(`Vee and Nine`)
+      .setColor("RANDOM")
+      .setTimestamp();
+  }
+
+  static empty() {
+    return new MessageEmbed();
   }
 }
