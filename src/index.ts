@@ -1,4 +1,3 @@
-import config from "./config";
 import path from "path";
 import fs from "fs";
 import Logger from "./util/logger";
@@ -23,11 +22,6 @@ export default class Bot extends Client {
     super({
       ...options,
       partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"],
-      presence: {
-        activity: {
-          name: config.presence,
-        },
-      },
     });
 
     this.loadDatabase();

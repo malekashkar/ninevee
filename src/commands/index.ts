@@ -7,15 +7,15 @@ import { DocumentType } from "@typegoose/typegoose";
 export type CategoryNames = "Utility" | "Intro" | "EmojiLocker";
 
 export default abstract class Command {
-  client: Client;
   permission: string;
   disabled = false;
   usage = "";
-  
+
+  client: Client;
   constructor(client: Client) {
     this.client = client;
   }
-  
+
   abstract name: string;
   abstract description: string;
   abstract category: CategoryNames;

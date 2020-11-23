@@ -9,12 +9,7 @@ export default class RemoveAllCommand extends UtilityGroup {
   name = "removeroleall";
   description = "Remove a role from all the users in the discord server.";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData: DocumentType<DbUser>,
-    guildData: DocumentType<DbGuild>
-  ) {
+  async run(message: Message) {
     const role = message.mentions.roles.first();
     if (!role)
       return message.channel.send(

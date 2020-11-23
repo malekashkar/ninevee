@@ -8,6 +8,7 @@ import embeds from "../../util/embeds";
 export default class lockEmojiCommand extends EmojiLockerGroup {
   name = "lock";
   description = "Lock an emoji to a certain role.";
+  usage = "<emoji> <@role>"
 
   async run(
     message: Message,

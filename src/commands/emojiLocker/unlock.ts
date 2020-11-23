@@ -8,6 +8,7 @@ import embeds from "../../util/embeds";
 export default class UnlockEmojiCommand extends EmojiLockerGroup {
   name = "unlock";
   description = "Unlock one of the locked emojis.";
+  usage = "<emoji> <@role>"
 
   async run(
     message: Message,

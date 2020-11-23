@@ -5,6 +5,7 @@ import embeds from "../../util/embeds";
 export default class EmbedCommand extends UtilityGroup {
   name = "editembed";
   description = "Edit an embed that was made in the past.";
+  usage = "<message id>";
 
   async run(message: Message, args: string[]) {
     const fetchedMessage = args[0]

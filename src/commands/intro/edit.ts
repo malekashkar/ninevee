@@ -1,7 +1,7 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import IntroGroup from ".";
-import config from "../../config";
+import { channels } from "../../config";
 import DbGuild from "../../models/guild";
 import DbUser, { IIntro, Intro } from "../../models/user";
 import { question } from "../../util";
@@ -10,6 +10,7 @@ import embeds from "../../util/embeds";
 export default class StartCommand extends IntroGroup {
   name = "edit";
   description = "Edit your introduction questions";
+  usage = "<option>";
 
   async run(
     message: Message,
@@ -42,7 +43,7 @@ export default class StartCommand extends IntroGroup {
     );
     const dm = await message.author.createDM();
     const introChannel = message.guild.channels.resolve(
-      config.channels.intros
+      channels.intros
     ) as TextChannel;
     if (!introChannel)
       return message.channel.send(

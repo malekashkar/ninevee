@@ -1,7 +1,7 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message, TextChannel } from "discord.js";
 import IntroGroup from ".";
-import config from "../../config";
+import { channels } from "../../config";
 import DbGuild from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../util/embeds";
@@ -24,7 +24,7 @@ export default class StartCommand extends IntroGroup {
       );
 
     const introChannel = message.guild.channels.resolve(
-      config.channels.intros
+      channels.intros
     ) as TextChannel;
     if (!introChannel)
       return message.channel.send(

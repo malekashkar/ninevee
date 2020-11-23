@@ -34,7 +34,7 @@ export default class DbGuild {
   @prop({ required: false, type: EmojiLocker })
   emojiLocker?: EmojiLocker[];
 
-  @prop({ required: false, type: Messages })
+  @prop({ required: false, type: Messages, default: {} })
   messages?: Messages;
 }
 

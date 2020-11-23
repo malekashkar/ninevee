@@ -8,6 +8,7 @@ registerFont("./src/assets/Multi.ttf", { family: "Multi" });
 export default class HeaderCommand extends UtilityGroup {
   name = "header";
   description = "Create a header in an embed.";
+  usage = "<header>";
 
   async run(message: Message, args: string[]) {
     const header = args.join(" ")

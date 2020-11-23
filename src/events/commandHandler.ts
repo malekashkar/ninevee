@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { GuildModel } from "../models/guild";
 import { UserModel } from "../models/user";
 import embeds from "../util/embeds";
-import config, { ICategories } from "../config";
+import { ICategories, prefixes } from "../config";
 import Logger from "../util/logger";
 import Event from ".";
 
@@ -26,7 +26,7 @@ export default class MessageHandler extends Event {
         }));
 
       const prefixRegex = new RegExp(
-        `^${Object.values(config.prefixes)
+        `^${Object.values(prefixes)
           .map((x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
           .join("|")}`
       );
@@ -53,13 +53,11 @@ export default class MessageHandler extends Event {
           )
         );
         return;
-      } else if (
-        config.prefixes[commandObj.category as categories] !== prefix
-      ) {
+      } else if (prefixes[commandObj.category as categories] !== prefix) {
         message.channel.send(
           embeds.error(
             `Please use the prefix \`${
-              config.prefixes[commandObj.category as categories]
+              prefixes[commandObj.category as categories]
             }\` with the command \`${command}\`!`,
             "Invalid Prefix"
           )

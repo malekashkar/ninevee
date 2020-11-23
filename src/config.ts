@@ -1,4 +1,4 @@
-const prefixes = {
+export const prefixes = {
   EmojiLocker: "e!",
   Intro: "i!",
   Utility: "u!",
@@ -10,7 +10,9 @@ export interface ICategories {
   Utility: string;
 }
 
-const reactionRoles = [
+export type Categories = keyof ICategories;
+
+export const reactionRoles = [
   "757585373386899629",
   "757585374456578178",
   "757585374938923110",
@@ -30,7 +32,7 @@ const reactionRoles = [
   "757585387433754664",
 ];
 
-const emojis = [
+export const emojis = [
   "🇦",
   "🇧",
   "🇨",
@@ -59,14 +61,6 @@ const emojis = [
   "🇿",
 ];
 
-const channels = {
-  intros: "765185760416235542"
-}
-
-export default {
-  presence: `Vee and Nine`,
-  prefixes,
-  reactionRoles,
-  emojis,
-  channels
+export const channels = {
+  intros: "765185760416235542",
 };

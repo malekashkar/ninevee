@@ -9,6 +9,7 @@ import embeds from "../../util/embeds";
 export default class unlockAddEmojis extends EmojiLockerGroup {
   name = "unlockall";
   description = "Unlock all of the locked emojis.";
+  usage = "<emoji>"
 
   async run(
     message: Message,

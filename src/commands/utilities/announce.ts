@@ -8,6 +8,7 @@ import embeds from "../../util/embeds";
 export default class AnnounceCommand extends UtilityGroup {
   name = "announce";
   description = "Announce a message to the discord server.";
+  usage = "<#channel> <announcement>";
 
   async run(
     message: Message,

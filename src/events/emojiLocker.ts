@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import config from "../config";
+import { prefixes } from "../config";
 import { GuildModel, EmojiLocker } from "../models/guild";
 import Event from ".";
 
@@ -7,7 +7,7 @@ export default class emojiLockerEvent extends Event {
   name = "message";
 
   async handle(message: Message) {
-    if (message.content.includes(config.prefixes.EmojiLocker)) return;
+    if (message.content.includes(prefixes.EmojiLocker)) return;
 
     const emojiInfo = message.content
       ? message.content.match(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/gm)

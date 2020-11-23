@@ -8,6 +8,7 @@ import embeds from "../../util/embeds";
 export default class AutoRoleCommand extends UtilityGroup {
   name = "autorole";
   description = "Add or remove to the autorole.";
+  usage = "<option> <@role>";
 
   async run(
     message: Message,
