@@ -6,8 +6,13 @@ import Command from "./commands";
 import Event from "./events";
 import { Collection, Invite, Client, ClientOptions } from "discord.js";
 import dotenv from "dotenv";
+import express from "express";
 
 dotenv.config();
+
+const app = express();
+app.listen(process.env.PORT || 5000);
+app.get("*", (req, res) => res.send("<h1>Hey there server owners!</h1>"));
 
 export default class Bot extends Client {
   commands: Collection<string, Command> = new Collection();
