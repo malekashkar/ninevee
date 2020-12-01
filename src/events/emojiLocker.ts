@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 import { prefixes } from "../config";
-import { GuildModel, EmojiLocker } from "../models/guild";
+import { GuildModel } from "../models/guild";
 import Event from ".";
+import { EmojiModel } from "../models/emojis";
 
 export default class emojiLockerEvent extends Event {
   name = "message";
@@ -23,20 +24,15 @@ export default class emojiLockerEvent extends Event {
       const guildData = await GuildModel.findOne({ guildId: message.guild.id });
       if (!guildData) return;
 
-      const emojiData = guildData.emojiLocker.find(
-        (x: EmojiLocker) => x.emojiId === id
+      const emojiData = await EmojiModel.findOne({
+        emojiId: id,
+      });
+      if (!emojiData?.lockedRoles.length) return;
+
+      const includes = emojiData.lockedRoles.some((roleId) =>
+        message.member.roles.cache.array().some((role) => role.id === roleId)
       );
-      if (!emojiData || !emojiData.lockedRoles.length) return;
-
-      const lockedRoles = emojiData.lockedRoles;
-      const userRoles = message.member.roles.cache.array();
-
-      let included = false;
-      for (let i = 0; i < userRoles.length; i++) {
-        if (lockedRoles.includes(userRoles[i].id)) included = !included;
-      }
-
-      if (!included) return message.delete();
+      if (!includes) return message.delete();
     });
   }
 }

@@ -34,7 +34,7 @@ export default class MessageHandler extends Event {
 
       const prefix = prefixMatch ? prefixMatch[0] : null;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
-      if (message.deletable) await message.delete();
+      // if (message.deletable) await message.delete();
 
       const args = message.content
         .slice(prefix.length)

@@ -1,43 +1,38 @@
-import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
 import EmojiLockerGroup from ".";
-import DbGuild, { EmojiLocker } from "../../models/guild";
-import DbUser from "../../models/user";
+import { EmojiModel } from "../../models/emojis";
 import embeds from "../../util/embeds";
 
 export default class emojiInfoCommand extends EmojiLockerGroup {
   name = "emojiinfo";
   description = "Receive information from an emoji.";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData: DocumentType<DbUser>,
-    guildData: DocumentType<DbGuild>
-  ) {
-    guildData.emojiLocker.forEach((emojiX: EmojiLocker) => {
-      const emoji = message.guild.emojis.cache.get(emojiX.emojiId);
-      if (!emoji)
-        return (guildData.emojiLocker = guildData.emojiLocker.filter(
-          (x: EmojiLocker) => x.emojiId !== emojiX.emojiId
-        ));
+  async run(message: Message) {
+    const emojisInformation = await EmojiModel.find({});
 
-      emojiX.lockedRoles.forEach((roleId: string) => {
-        const roleX = message.guild.roles.cache.get(roleId);
-        if (!roleX)
-          return (emojiX.lockedRoles = emojiX.lockedRoles.filter(
-            (x) => x !== roleId
-          ));
-      });
-    });
+    if (emojisInformation.length) {
+      for (const emojiInformation of emojisInformation) {
+        const emoji = this.client.emojis.resolve(emojiInformation.emojiId);
+        if (!emoji) await emojiInformation.deleteOne();
 
-    if (!guildData.emojiLocker.length)
+        for (const roleId of emojiInformation.lockedRoles) {
+          const role = message.guild.roles.resolve(roleId);
+          if (!role)
+            emojiInformation.lockedRoles = emojiInformation.lockedRoles.filter(
+              (x) => x !== roleId
+            );
+        }
+        await emojiInformation.save();
+      }
+    }
+
+    if (!emojisInformation.length)
       return message.channel.send(
         embeds.error(`There are no emojis with locked roles!`)
       );
 
-    const description = guildData.emojiLocker
-      .map((x: EmojiLocker) => {
+    const description = emojisInformation
+      .map((x) => {
         const emoji = message.guild.emojis.cache.get(x.emojiId);
         if (emoji)
           return `Emoji: ${emoji}\nLocked Roles: ${

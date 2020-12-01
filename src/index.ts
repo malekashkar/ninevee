@@ -5,14 +5,9 @@ import mongoose from "mongoose";
 import Command from "./commands";
 import Event from "./events";
 import { Collection, Invite, Client, ClientOptions } from "discord.js";
-import express from "express";
 import dotenv from "dotenv";
 
 dotenv.config();
-
-const app = express();
-app.listen(process.env.PORT || 5000);
-app.get("/");
 
 export default class Bot extends Client {
   commands: Collection<string, Command> = new Collection();
