@@ -17,8 +17,8 @@ export default class lockEmojiCommand extends EmojiLockerGroup {
         embeds.error(`Please provide an emoji as the first argument!`)
       );
 
-    const role = message.mentions.roles.first();
-    if (!role)
+    const roles = message.mentions.roles;
+    if (!roles.size)
       return message.channel.send(
         embeds.error(`Please tag a role as the second argument!`)
       );
@@ -27,27 +27,22 @@ export default class lockEmojiCommand extends EmojiLockerGroup {
       emojiId: emojiInfo[3],
     });
 
-    if (emojiData && emojiData.lockedRoles.includes(role.id))
-      return message.channel.send(
-        embeds.error(
-          `The role ${role} is already locked to the emoji ${emojiInfo[0]}.`,
-          `Emoji Locker Error`
-        )
-      );
-
     if (!emojiData) {
       await EmojiModel.create({
         emojiId: emojiInfo[3],
-        lockedRoles: [role.id],
+        lockedRoles: roles.map((x) => x.id),
       });
     } else {
-      emojiData.lockedRoles.push(role.id);
+      for (const roleId of roles.map((x) => x.id))
+        emojiData.lockedRoles.push(roleId);
       await emojiData.save();
     }
 
     return message.channel.send(
       embeds.normal(
-        `The emoji ${emojiInfo[0]} has been locked to role ${role}.`,
+        `The emoji ${
+          emojiInfo[0]
+        } has been locked to role(s) ${roles.array().join(", ")}.`,
         `Emoji Locker`
       )
     );
