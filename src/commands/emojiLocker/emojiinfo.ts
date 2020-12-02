@@ -2,51 +2,52 @@ import { Message } from "discord.js";
 import EmojiLockerGroup from ".";
 import { EmojiModel } from "../../models/emojis";
 import embeds from "../../util/embeds";
+import Paginator from "../../util/pagecord";
 
 export default class emojiInfoCommand extends EmojiLockerGroup {
   name = "emojiinfo";
   description = "Receive information from an emoji.";
 
   async run(message: Message) {
-    const emojisInformation = await EmojiModel.find({});
-
-    if (emojisInformation.length) {
-      for (const emojiInformation of emojisInformation) {
-        const emoji = this.client.emojis.resolve(emojiInformation.emojiId);
-        if (!emoji) await emojiInformation.deleteOne();
-
-        for (const roleId of emojiInformation.lockedRoles) {
-          const role = message.guild.roles.resolve(roleId);
-          if (!role)
-            emojiInformation.lockedRoles = emojiInformation.lockedRoles.filter(
-              (x) => x !== roleId
-            );
-        }
-        await emojiInformation.save();
-      }
-    }
-
-    if (!emojisInformation.length)
+    const emojisCount = await EmojiModel.countDocuments();
+    if (!emojisCount)
       return message.channel.send(
         embeds.error(`There are no emojis with locked roles!`)
       );
 
-    const description = emojisInformation
-      .map((x) => {
-        const emoji = message.guild.emojis.cache.get(x.emojiId);
-        if (emoji)
-          return `Emoji: ${emoji}\nLocked Roles: ${
-            x.lockedRoles.length
-              ? x.lockedRoles
-                  .map((roleId: string) => `<@&${roleId}>`)
-                  .join(", ")
-              : `There are no locked roles available.`
-          }`;
-      })
-      .filter((x) => !!x);
+    const paginator = new Paginator(
+      message,
+      Math.ceil(emojisCount / 5),
+      async (pageIndex) => {
+        let documents = await EmojiModel.find()
+          .skip(pageIndex * 5)
+          .limit(5);
 
-    return message.channel.send(
-      embeds.normal(description.join("\n"), `Emoji Locker`)
+        const description = documents
+          .map((x) => {
+            if (
+              !message.member.hasPermission("ADMINISTRATOR") &&
+              !x.lockedRoles.some((roleId) =>
+                message.member.roles.cache.has(roleId)
+              )
+            )
+              return;
+
+            const emoji = this.client.emojis.resolve(x.emojiId);
+            const roles = x.lockedRoles
+              .map((roleId) => `<@&${roleId}>`)
+              .join(` `);
+            return `${emoji} ~ ${roles}`;
+          })
+          .filter((x) => !!x)
+          .join("\n");
+
+        return embeds.normal(
+          description,
+          `Emoji Information | ${pageIndex + 1}`
+        );
+      }
     );
+    await paginator.start();
   }
 }
