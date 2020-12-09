@@ -7,5 +7,4 @@ dist/
 
 # Pub Files
 yarn.lock
-package.lock
 package-lock.json
