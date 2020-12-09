@@ -1,53 +1,62 @@
 import { Message } from "discord.js";
 import EmojiLockerGroup from ".";
-import { EmojiModel } from "../../models/emojis";
 import embeds from "../../util/embeds";
-import Paginator from "../../util/pagecord";
+import { stripIndents } from "common-tags";
+import moment from "moment";
 
 export default class emojiInfoCommand extends EmojiLockerGroup {
   name = "emojiinfo";
   description = "Receive information from an emoji.";
 
-  async run(message: Message) {
-    const emojisCount = await EmojiModel.countDocuments();
-    if (!emojisCount)
+  async run(message: Message, args: string[]) {
+    const guildEmojis = message.guild.emojis.cache;
+    if (!guildEmojis.size)
       return message.channel.send(
-        embeds.error(`There are no emojis with locked roles!`)
+        embeds.error(`This server does not have any custom emojis to display.`)
       );
 
-    const paginator = new Paginator(
-      message,
-      Math.ceil(emojisCount / 5),
-      async (pageIndex) => {
-        let documents = await EmojiModel.find()
-          .skip(pageIndex * 5)
-          .limit(5);
+    const selectedEmoji = args[0]
+      ? args[0].match(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/)
+      : false;
 
-        const description = documents
-          .map((x) => {
-            if (
-              !message.member.hasPermission("ADMINISTRATOR") &&
-              !x.lockedRoles.some((roleId) =>
-                message.member.roles.cache.has(roleId)
-              )
-            )
-              return;
-
-            const emoji = this.client.emojis.resolve(x.emojiId);
-            const roles = x.lockedRoles
-              .map((roleId) => `<@&${roleId}>`)
-              .join(` `);
-            return `${emoji} ~ ${roles}`;
-          })
-          .filter((x) => !!x)
-          .join("\n");
-
-        return embeds.normal(
-          description,
-          `Emoji Information | ${pageIndex + 1}`
+    if (!selectedEmoji) {
+      const staticEmoji = guildEmojis.filter((x) => !x.animated).array();
+      const animatedEmojis = guildEmojis.filter((x) => x.animated).array();
+      const embed = embeds
+        .normal(
+          `Here is a list of the emotes in **${message.guild.name}**\nFor more information, provide an emoji after the command \`emojiinfo <emoji>\``,
+          `${message.guild.name} Emojis`
+        )
+        .addField(
+          `${guildEmojis.size} Emojis`,
+          stripIndents`Static: **${staticEmoji.length}**
+          Animated: **${animatedEmojis.length}**`
+        )
+        .setThumbnail(message.guild.iconURL({ dynamic: true }));
+      return message.channel.send(embed);
+    } else {
+      const selectedEmojiId = selectedEmoji[3];
+      const guildEmoji = message.guild.emojis.resolve(selectedEmojiId);
+      if (!guildEmoji)
+        return message.channel.send(
+          embeds.error(`That emoji does not belong to this discord server!`)
         );
-      }
-    );
-    await paginator.start();
+
+      const embed = embeds
+        .normal(
+          `**Animated**: ${guildEmoji.animated ? "Yes" : "No"}
+        **Roles**: ${
+          guildEmoji.roles.cache.size
+            ? guildEmoji.roles.cache.array().join(" ")
+            : `@everyone`
+        }
+        **ID**: ${guildEmoji.id}
+        **Created At**: ${moment(guildEmoji.createdTimestamp).format("LLL")}
+        **Download**: [Click Here](${guildEmoji.url})`,
+          `${guildEmoji.name} Emoji`
+        )
+        .setThumbnail(guildEmoji.url);
+      return message.channel.send(embed);
+    }
   }
 }

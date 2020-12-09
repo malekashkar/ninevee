@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import EmojiLockerGroup from ".";
-import { EmojiModel } from "../../models/emojis";
 import embeds from "../../util/embeds";
 
 export default class lockEmojiCommand extends EmojiLockerGroup {
@@ -17,32 +16,26 @@ export default class lockEmojiCommand extends EmojiLockerGroup {
         embeds.error(`Please provide an emoji as the first argument!`)
       );
 
-    const roles = message.mentions.roles;
-    if (!roles.size)
+    const roles = message.mentions.roles.array();
+    if (!roles.length)
+      return message.channel.send(embeds.error(`Please tag the role(s)!`));
+
+    const emojiId = emojiInfo[3];
+    const guildEmoji = message.guild.emojis.resolve(emojiId);
+    if (!guildEmoji)
       return message.channel.send(
-        embeds.error(`Please tag a role as the second argument!`)
+        embeds.error(`That emoji does not belong to this discord server!`)
       );
 
-    const emojiData = await EmojiModel.findOne({
-      emojiId: emojiInfo[3],
-    });
-
-    if (!emojiData) {
-      await EmojiModel.create({
-        emojiId: emojiInfo[3],
-        lockedRoles: roles.map((x) => x.id),
-      });
-    } else {
-      for (const roleId of roles.map((x) => x.id))
-        emojiData.lockedRoles.push(roleId);
-      await emojiData.save();
+    for (const role of roles) {
+      await guildEmoji.roles.add(role);
     }
 
     return message.channel.send(
       embeds.normal(
-        `The emoji ${
-          emojiInfo[0]
-        } has been locked to role(s) ${roles.array().join(", ")}.`,
+        `The emoji ${emojiInfo[0]} have been locked to the role(s) ${roles.join(
+          ", "
+        )}.`,
         `Emoji Locker`
       )
     );
