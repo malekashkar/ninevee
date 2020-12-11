@@ -19,7 +19,7 @@ export default abstract class Command {
   abstract name: string;
   abstract description: string;
   abstract category: CategoryNames;
-  abstract async run(
+  abstract run(
     _message: Message,
     _args: string[],
     _userData?: DocumentType<DbUser>,

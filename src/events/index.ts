@@ -12,5 +12,5 @@ export default abstract class Event {
     this.client = client;
   }
 
-  abstract async handle(...args: unknown[]): Promise<void>;
+  abstract handle(...args: unknown[]): Promise<void>;
 }
