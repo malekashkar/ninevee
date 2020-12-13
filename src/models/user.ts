@@ -2,50 +2,50 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 
 export class Intro {
   @prop()
-  introMessageId: string;
+  introMessageId?: string;
 
   @prop()
-  name: string;
+  name?: string;
 
   @prop()
-  age: string;
+  age?: string;
 
   @prop()
-  location: string;
+  location?: string;
 
   @prop()
-  language: string;
+  language?: string;
 
   @prop()
-  hobbies: string;
+  hobbies?: string;
 
   @prop()
-  game: string;
+  game?: string;
 
   @prop()
-  movie: string;
+  movie?: string;
 
   @prop()
-  pet: string;
+  pet?: string;
 
   @prop()
-  extra: string;
+  extra?: string;
 
   @prop()
-  icon: string;
+  icon?: string;
 
   constructor(
-    introMessageId: string,
-    name: string,
-    age: string,
-    location: string,
-    language: string,
-    hobbies: string,
-    game: string,
-    movie: string,
-    pet: string,
-    extra: string,
-    icon: string
+    introMessageId?: string,
+    name?: string,
+    age?: string,
+    location?: string,
+    language?: string,
+    hobbies?: string,
+    game?: string,
+    movie?: string,
+    pet?: string,
+    extra?: string,
+    icon?: string
   ) {
     this.introMessageId = introMessageId;
     this.name = name;
@@ -65,7 +65,7 @@ export default class DbUser {
   @prop()
   userId!: string;
 
-  @prop({ default: null })
+  @prop({ default: {} })
   intro?: Intro;
 }
 

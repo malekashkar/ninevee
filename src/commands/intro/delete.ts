@@ -10,12 +10,7 @@ export default class StartCommand extends IntroGroup {
   name = "delete";
   description = "Delete your introduction questions";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData: DocumentType<DbUser>,
-    guildData: DocumentType<DbGuild>
-  ) {
+  async run(message: Message, args: string[], userData: DocumentType<DbUser>) {
     if (!userData.intro.introMessageId)
       return message.channel.send(
         embeds.error(

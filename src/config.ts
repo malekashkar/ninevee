@@ -1,3 +1,5 @@
+import { IIntro } from "./models/user";
+
 export const prefixes = {
   EmojiLocker: "e!",
   Intro: "i!",
@@ -63,4 +65,17 @@ export const emojis = [
 
 export const channels = {
   intros: "765185760416235542",
+};
+
+export const introOptions: { [key in IIntro]?: string } = {
+  name: "What is your name?",
+  age: "How old are you?",
+  location: "What country/region are you from?",
+  language: "What is your main language?",
+  hobbies: "List some of your hobbies!",
+  game: "What is your favorite game?",
+  movie: "What is your favorite movie?",
+  pet: "Do you have a pet? If so, what type!",
+  extra: "Tell us more about yourself.",
+  icon: "Send a link of the profile picture you would like to use.",
 };

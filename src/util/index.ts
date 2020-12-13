@@ -1,4 +1,4 @@
-import { DMChannel, Message, TextChannel } from "discord.js";
+import { DMChannel, Message, TextChannel, User } from "discord.js";
 
 export async function react(message: Message, reactions: string[]) {
   for (const reaction of reactions) {
@@ -9,14 +9,14 @@ export async function react(message: Message, reactions: string[]) {
 }
 
 export async function question(
-  message: Message,
+  user: User,
   channel: DMChannel | TextChannel,
   question: string
 ) {
   const questionMessage = await channel.send(question);
 
   const response = await channel.awaitMessages(
-    (x) => x.author.id === message.author.id,
+    (x) => x.author.id === user.id,
     { max: 1, time: 900000, errors: ["time"] }
   );
   if (!response) return;
