@@ -13,15 +13,25 @@ export async function question(
   channel: DMChannel | TextChannel,
   question: string
 ) {
-  const questionMessage = await channel.send(question);
-
-  const response = await channel.awaitMessages(
-    (x) => x.author.id === user.id,
-    { max: 1, time: 900000, errors: ["time"] }
+  const questionMessage = await channel.send(
+    question + `\nReply with **-** if you would like to skip this.`
   );
-  if (!response) return;
-  if (questionMessage.deletable) questionMessage.delete();
-  if (response.first().deletable) response.first().delete();
 
-  return response.first();
+  const response = await channel.awaitMessages((x) => x.author.id === user.id, {
+    max: 1,
+    time: 900000,
+    errors: ["time"],
+  });
+  if (response) {
+    if (questionMessage.deletable) questionMessage.delete();
+    if (response.first().deletable) response.first().delete();
+    if (
+      ["-", "no", "skip", "none"].includes(
+        response.first().content.toLowerCase()
+      )
+    )
+      return null;
+
+    return response.first();
+  } else return null;
 }

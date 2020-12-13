@@ -1,5 +1,12 @@
-import { EmbedField, Message, MessageReaction, User } from "discord.js";
+import {
+  EmbedField,
+  Message,
+  MessageReaction,
+  TextChannel,
+  User,
+} from "discord.js";
 import UtilityGroup from ".";
+import { question } from "../../util";
 import embeds from "../../util/embeds";
 
 export default class EmbedCommand extends UtilityGroup {
@@ -13,45 +20,52 @@ export default class EmbedCommand extends UtilityGroup {
     );
 
     const title = await question(
-      message,
-      `What would you like the embed title to say?\nReply with "no" if you would like to skip this.`
+      message.author,
+      message.channel as TextChannel,
+      `What would you like the embed title to say?`
     );
     const description = await question(
-      message,
-      `What would you like the embed description to say?\nReply with "no" if you would like to skip this.`
+      message.author,
+      message.channel as TextChannel,
+      `What would you like the embed description to say?`
     );
     const image = await question(
-      message,
-      `Please provide a link to the image you would like to use.\nReply with "no" if you would like to skip this.`
+      message.author,
+      message.channel as TextChannel,
+      `Please provide a link to the image you would like to use.`
     );
     const thumbnail = await question(
-      message,
-      `Please provide a link to the thumbnail you would like to use.\nReply with "no" if you would like to skip this.`
+      message.author,
+      message.channel as TextChannel,
+      `Please provide a link to the thumbnail you would like to use.`
     );
     const fieldsQuestion = await question(
-      message,
-      `How many fields would you like?\nReply with "no" if you would like to skip this.`
+      message.author,
+      message.channel as TextChannel,
+      `How many fields would you like?`
     );
     const fieldsAmount =
-      fieldsQuestion && !isNaN(parseInt(fieldsQuestion))
-        ? parseInt(fieldsQuestion)
+      fieldsQuestion && !isNaN(parseInt(fieldsQuestion.content))
+        ? parseInt(fieldsQuestion.content)
         : 0;
     const fields: EmbedField[] = [];
 
     for (let i = 0; i < fieldsAmount; i++) {
       const fieldTitle = await question(
-        message,
+        message.author,
+        message.channel as TextChannel,
         `What would you like **field ${i + 1}** title to be?`
       );
       const fieldDescription = await question(
-        message,
+        message.author,
+        message.channel as TextChannel,
         `What would you like **field ${i + 1}** description to be?`
       );
 
       if (fieldTitle && fieldDescription) {
         fields.push({
-          name: fieldTitle,
-          value: fieldDescription,
+          name: fieldTitle.content,
+          value: fieldDescription.content,
           inline: true,
         });
       }
@@ -60,10 +74,10 @@ export default class EmbedCommand extends UtilityGroup {
     const color = await colorQuestion(message);
     const embed = embeds.empty().setColor(color);
 
-    if (title) embed.setTitle(title);
-    if (description) embed.setDescription(description);
-    if (image) embed.setImage(image);
-    if (thumbnail) embed.setThumbnail(thumbnail);
+    if (title) embed.setTitle(title.content);
+    if (description) embed.setDescription(description.content);
+    if (image) embed.setImage(image.content);
+    if (thumbnail) embed.setThumbnail(thumbnail.content);
     if (fields.length) embed.addFields(fields);
     return await channel.send(embed);
   }
@@ -86,18 +100,6 @@ async function colorQuestion(message: Message) {
       ? "#000000"
       : "#2C2F33"
     : "#2C2F33";
-}
-
-async function question(message: Message, question: string) {
-  const questionMessage = await message.channel.send(embeds.question(question));
-  const collect = await message.channel.awaitMessages(
-    (x) => x.author.id === message.author.id,
-    { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
-  );
-  if (questionMessage.deletable) await questionMessage.delete();
-  return collect?.first() && collect?.first().content !== "no"
-    ? collect?.first().content
-    : null;
 }
 
 async function getChannel(message: Message, question: string) {
